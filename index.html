@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>lil chat</title>
+    <link rel='stylesheet' type='text/css' href='chat-style.css'>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('form').submit(function() {
+        socket.emit('chat message', 'user ' + socket.id + ': ' + $('#m').val());
+        $('#m').val('');
+        return false;
+
+      });
+      socket.on('connect', function(){
+        console.log('Socket ID is: ' + socket.id);
+        socket.emit('new user', socket.id);
+      });
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+    </script>
+  </body>
+</html>
