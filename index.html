@@ -5,20 +5,36 @@
     <link rel='stylesheet' type='text/css' href='chat-style.css'>
   </head>
   <body>
+    <form id="username" action="">
+      <input id="un" autocomplete="off" /><button>Submit</button>
+    </form>
+
     <ul id="messages"></ul>
-    <form action="">
+    <form id="send" action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       var socket = io();
-      $('form').submit(function() {
-        socket.emit('chat message', 'user ' + socket.id + ': ' + $('#m').val());
+      var screenName = '';
+      $('#send').submit(function() {
+        if (screenName === '') {
+            socket.emit('chat message', 'user ' + socket.id + ': ' + $('#m').val());
+        } else {
+            socket.emit('chat message', screenName + ': ' + $('#m').val());
+        }
         $('#m').val('');
         return false;
 
       });
+      $('#username').submit(function() {
+          screenName = $('#un').val();
+          var userArr = [socket.id, screenName];
+          socket.emit('username', userArr);
+          $('#un').val('');
+          return false;
+      })
       socket.on('connect', function(){
         console.log('Socket ID is: ' + socket.id);
         socket.emit('new user', socket.id);
