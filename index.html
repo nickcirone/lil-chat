@@ -43,6 +43,11 @@
         $('#messages').append($('<li>').text(msg));
         window.scrollTo(0, document.body.scrollHeight);
       });
+      socket.on('recent', function(data){
+        for (var i in data.messages) {
+          $('#messages').append($('<li>').text(data.messages[i]));
+        }
+      });
     </script>
   </body>
 </html>

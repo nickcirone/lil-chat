@@ -7,6 +7,22 @@ var clientIds = [];
 var clientUsernames = [];
 var messageCount = 0;
 
+function MessageQueue(size) {
+  this.messages = [];
+  this.size = size;
+
+  this.addMessage = function(data) {
+    if (this.messages.length < size) {
+      this.messages.push(data);
+    } else {
+      this.messages.shift();
+      this.messages.push(data);
+    }
+  }
+}
+
+var recentMessages = new MessageQueue(20);
+
 app.use(express.static(__dirname + '/'));
 
 app.get('/', function(req, res){
@@ -19,13 +35,17 @@ io.on('connection', function(socket) {
         clientUsernames.push('');
         var msg = 'user ' + userId + ' connected!';
         console.log(msg);
-        io.emit('chat message', msg);
+        recentMessages.addMessage(msg);
+        io.to(socket.id).emit('recent', recentMessages);
+        socket.broadcast.emit('chat message', msg);
     });
     socket.on('username', function(arr) {
         var userIndex = clientIds.indexOf(socket.id);
         clientUsernames[userIndex] = arr[1];
-        console.log('user ' + arr[0] + ' chose username: ' + arr[1]);
-        io.emit('chat message', 'user ' + arr[0] + ' changed name to ' + arr[1]);
+        var msg = 'user ' + arr[0] + ' changed name to ' + arr[1];
+        console.log(msg);
+        recentMessages.addMessage(msg);
+        io.emit('chat message', msg);
     });
     socket.on('disconnect', function() {
         var userIndex = clientIds.indexOf(socket.id);
@@ -33,10 +53,12 @@ io.on('connection', function(socket) {
         if (departingUser === '') {
             var msg = 'user '+ socket.id + ' left the chat.';
             console.log(msg);
+            recentMessages.addMessage(msg);
             io.emit('chat message', msg);
         } else {
             var msg = departingUser + ' left the chat.';
             console.log(msg);
+            recentMessages.addMessage(msg);
             io.emit('chat message', msg);
         }
         clientIds.splice(userIndex, 1);
@@ -44,6 +66,7 @@ io.on('connection', function(socket) {
     });
     socket.on('chat message', function(msg) {
         console.log('message ' + messageCount.toString() + ': ' + msg);
+        recentMessages.addMessage(msg);
         io.emit('chat message', msg);
         messageCount++;
     });
