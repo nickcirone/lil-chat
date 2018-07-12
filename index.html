@@ -6,7 +6,7 @@
   </head>
   <body>
     <form id="username" action="">
-      <input id="un" autocomplete="off" /><button>Submit</button>
+      Username: <input id="un" autocomplete="off" /><button>Submit</button>
     </form>
 
     <ul id="messages"></ul>
@@ -19,19 +19,24 @@
       var socket = io();
       var screenName = '';
       $('#send').submit(function() {
-        if (screenName === '') {
-            socket.emit('chat message', 'user ' + socket.id + ': ' + $('#m').val());
-        } else {
-            socket.emit('chat message', screenName + ': ' + $('#m').val());
+        var currMessage = $('#m').val();
+        if (currMessage !== '') {
+          if (screenName === '') {
+              socket.emit('chat message', 'user ' + socket.id + ': ' + currMessage);
+          } else {
+              socket.emit('chat message', screenName + ': ' + currMessage);
+          }
         }
         $('#m').val('');
         return false;
-
       });
       $('#username').submit(function() {
+          var previousName = screenName;
           screenName = $('#un').val();
           var userArr = [socket.id, screenName];
-          socket.emit('username', userArr);
+          if (screenName !== '' && screenName !== previousName) {
+            socket.emit('username', userArr);
+          }
           $('#un').val('');
           return false;
       })

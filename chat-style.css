@@ -9,9 +9,13 @@ body {
 }
 
 #username {
-  background: black;
+  background: white;
   position: fixed;
   top: 0;
+}
+
+#username button {
+  background: rgb(130, 224, 255);
 }
 
 #send {
