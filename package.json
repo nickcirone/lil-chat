@@ -1,6 +1,6 @@
 {
   "name": "lil chat",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "a simple server-client in-browser chat application",
   "dependencies": {
     "express": "^4.16.3",

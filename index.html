@@ -32,7 +32,9 @@
       });
       $('#username').submit(function() {
           var previousName = screenName;
-          screenName = $('#un').val();
+          if ($('#un').val() !== '') {
+            screenName = $('#un').val();
+          }
           var userArr = [socket.id, screenName];
           if (screenName !== '' && screenName !== previousName) {
             socket.emit('username', userArr);
