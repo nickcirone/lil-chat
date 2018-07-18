@@ -7,6 +7,9 @@ var clientIds = [];
 var clientUsernames = [];
 var messageCount = 0;
 
+// An array based object that operates like a queue of finite length.
+// When the preferred size is reached, the first entry will be dequeued to make space for the newest entry.
+
 function MessageQueue(size) {
   this.messages = [];
   this.size = size;

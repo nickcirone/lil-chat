@@ -18,6 +18,8 @@
     <script>
       var socket = io();
       var screenName = '';
+      // When a message is entered and sent, trigger the following function
+      // Does not allow empty texts to be sent.
       $('#send').submit(function() {
         var currMessage = $('#m').val();
         if (currMessage !== '') {
@@ -30,6 +32,8 @@
         $('#m').val('');
         return false;
       });
+      // When a user submits a new username, trigger the following function
+      // Does not allow empty names or the name that the user is currently using.
       $('#username').submit(function() {
           var previousName = screenName;
           if ($('#un').val() !== '') {
@@ -50,6 +54,7 @@
         $('#messages').append($('<li>').text(msg));
         window.scrollTo(0, document.body.scrollHeight);
       });
+      // Display recent messages that have been posted to the server upon client connection
       socket.on('recent', function(data){
         for (var i in data.messages) {
           $('#messages').append($('<li>').text(data.messages[i]));
