@@ -1,7 +1,8 @@
-Lil Chat, A simple server-client chat application
-Created by Nicholas Cirone, 7/11/18 - Present
+Little Chat, A simple server-client chat application
 
-Lil Chat is built using node, express, and socket.io on the server side and javascript/jquery on the front-end.
+Created by Nicholas Cirone (7/11/18-present)
+
+Little Chat is built using node, express, and socket.io on the server side and javascript/jquery on the front-end.
 In the near future I plan on using the Vue framework to flesh out the front-end and I also plan to implement additional
 functionality, such as a list of all clients active on the server and the ability to send direct messages between clients.
 
